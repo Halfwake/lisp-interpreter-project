@@ -1,16 +1,22 @@
 #include <map>
 
-class Environment {
-private:
-	std::map<string, Expression> map;
-	Environment & parent;
-public:
-	Expression & operator[](const std::string symbol)
-}
+namespace environment {
 
-Expression & Environment::operator[](const std::string symbol) {
-	if (map.find(symbol) != map.end()) {
-		return map[symbol]
-	} else {
-}
+  Expression & Environment::get(const Symbol symbol) {
+    if (map.find(symbol) != map.end()) {
+      return map[symbol];
+    } else {
+      throw LookupException(symbol);
+    }
+  }
 
+  void Environment::set(const Symbol symbol, const Expression expr) {
+    map[symbol] = expr;
+  }
+
+
+  LookupException (const Symbol symbol) {
+    this.symbol = symbol;
+  }
+
+}
