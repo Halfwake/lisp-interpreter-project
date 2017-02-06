@@ -1,8 +1,15 @@
 #include <map>
+#include <string>
+#include <exception>
+#include <stdexcept>
+
+#include "tokenize.hpp"
+
+using tokenize::Expression;
 
 namespace environment {
 
-typedef Symbol std::string;
+  typedef std::string Symbol;
 
 /*
  * Represents a mapping between the identifiers in a variable and the
@@ -15,17 +22,20 @@ typedef Symbol std::string;
  public:
    Expression & get(const Symbol symbol);
    void set(const Symbol symbol, const Expression expr);
- }
+ };
 
 
  /*
   * Throw when a variable appears that has not been defined. The
   * constructor should be called with the missing symbol.
   */
- class LookupException : public std::runtime_error {
+ class LookupException : public std::exception {
  public:
-   const symbol symbol;
-   LookupException (const Symbol symbol);
- }
+   LookupException (Symbol symbol) : symbol(symbol) {};
+   Symbol getSymbol();
+   const char * what() const noexcept;
+ private:
+   Symbol symbol;
+ };
 
 }

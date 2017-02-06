@@ -1,4 +1,11 @@
+#include "environment.hpp"
+
 #include <map>
+#include <exception>
+
+#include "tokenize.hpp"
+
+using tokenize::Expression;
 
 namespace environment {
 
@@ -14,9 +21,12 @@ namespace environment {
     map[symbol] = expr;
   }
 
+  Symbol LookupException::getSymbol() {
+    return this->symbol;
+  }
 
-  LookupException (const Symbol symbol) {
-    this.symbol = symbol;
+  const char * LookupException::what () const noexcept {
+    return symbol.c_str();
   }
 
 }
