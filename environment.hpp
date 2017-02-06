@@ -5,6 +5,9 @@
 
 #include "tokenize.hpp"
 
+#ifndef ENVIRONMENT_H
+#define ENVIRONMENT_H
+
 using tokenize::Expression;
 
 namespace environment {
@@ -39,3 +42,5 @@ namespace environment {
  };
 
 }
+
+#endif
