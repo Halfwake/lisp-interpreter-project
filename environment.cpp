@@ -3,9 +3,9 @@
 #include <map>
 #include <exception>
 
-#include "tokenize.hpp"
+#include "expression.hpp"
 
-using tokenize::Expression;
+using expression::Expression;
 
 namespace environment {
 
