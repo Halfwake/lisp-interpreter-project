@@ -8,8 +8,8 @@
 namespace token {
   std::vector<Token> tokenize(std::istream & stream) {
     std::vector<Token> tokens;
-    Token word;
-    switch (stream.get()) {
+    std::vector<char> word;
+    switch (stream.peek()) {
     case '(':
       tokens.push_back("(");
       break;
@@ -19,9 +19,17 @@ namespace token {
     case '\t':
     case '\r':
     case '\n':
-      tokens.push_back(word);
-      word = "";
-      while (isspace(stream.peek()));	
+      while (isspace(stream.peek())) {
+	stream.get();
+      }
+      if (!word.empty()) {
+	std::string token(word.begin(), word.end());
+	tokens.push_back(token);
+	word.clear();
+      }
+      break;
+    default:
+      word.push_back(stream.get());
     }
     return tokens;
   }  

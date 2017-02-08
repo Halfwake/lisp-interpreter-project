@@ -8,7 +8,7 @@
 #ifndef ENVIRONMENT_H
 #define ENVIRONMENT_H
 
-using tokenize::Expression;
+using expression::Expression;
 
 namespace environment {
 
