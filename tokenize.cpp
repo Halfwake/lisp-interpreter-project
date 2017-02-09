@@ -1,6 +1,6 @@
 #include <vector>
 #include <string>
-#include <iostream>
+#include <ostream>
 #include <cctype>
 
 #include "tokenize.hpp"
@@ -10,29 +10,34 @@ namespace token {
     std::vector<Token> tokens;
     std::vector<char> word;
     size_t lineNumber = 1;
-    switch (stream.peek()) {
-    case '(':
-      tokens.push_back(Token(OPEN_PAREN, "(", lineNumber));
-      break;
-    case ')':
-      tokens.push_back(Token(CLOSE_PAREN, ")", lineNumber));
-    case ' ':
-    case '\t':
-    case '\r':
-    case '\n':
-      while (isspace(stream.peek())) {
-	if(stream.get() == '\n') {
-	  lineNumber++;
+    while (!stream.eof()) {
+      switch (stream.peek()) {
+      case '(':
+	tokens.push_back(Token(OPEN_PAREN, "(", lineNumber));
+	stream.get();
+	break;
+      case ')':
+	tokens.push_back(Token(CLOSE_PAREN, ")", lineNumber));
+	stream.get();
+	break;
+      case ' ':
+      case '\t':
+      case '\r':
+      case '\n':
+	while (isspace(stream.peek())) {
+	  if(stream.get() == '\n') {
+	    lineNumber++;
+	  }
 	}
+	if (!word.empty()) {
+	  std::string text(word.begin(), word.end());
+	  tokens.push_back(Token(ATOM, text, lineNumber));
+	  word.clear();
+	}
+	break;
+      default:
+	word.push_back(stream.get());
       }
-      if (!word.empty()) {
-	std::string text(word.begin(), word.end());
-	tokens.push_back(Token(ATOM, text, lineNumber));
-	word.clear();
-      }
-      break;
-    default:
-      word.push_back(stream.get());
     }
     return tokens;
   }
@@ -43,23 +48,33 @@ namespace token {
     this->lineNumber = lineNumber;
   }
 
-  bool Token::operator==(const Token & other) {
+  bool Token::operator==(const Token & other) const {
     return (type == other.type) && (text == other.text) && (lineNumber == other.lineNumber);
   }
   
-  bool Token::operator!=(const Token & other) {
-    return !(*this == other);
+  bool Token::operator!=(const Token & other) const {
+    return (*this) == other;
   }
 
-  Type Token::getType() {
+  Type Token::getType() const {
     return this->type;
   }
 
-  std::string Token::getText() {
+  std::string Token::getText() const {
     return this->text;
   }
 
-  size_t Token::getLineNumber() {
+  size_t Token::getLineNumber() const {
     return lineNumber;
   }
+
+  std::ostream & operator << (std::ostream & stream, const token::Token & token) {
+    stream << "(" << token.getType()
+	   << "|" << token.getText()
+	   << "|" << token.getLineNumber()
+	   << ")";
+    return stream;
+  }
 }
+
+

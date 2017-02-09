@@ -8,11 +8,12 @@ namespace token {
   class Token {
   public:
     Token(Type type, std::string text, size_t lineNumber);
-    Type getType();
-    std::string getText();
-    size_t getLineNumber();
-    bool operator==(const Token & other);
-    bool operator!=(const Token & other);
+    Type getType() const;
+    std::string getText() const;
+    size_t getLineNumber() const;
+    bool operator==(const Token & other) const;
+    bool operator!=(const Token & other) const;
+    friend std::ostream & operator << (std::ostream & stream, const Token & token);
   private:
     Type type;
     std::string text;
@@ -21,3 +22,4 @@ namespace token {
 
   std::vector<Token> tokenize(std::istream & stream);
 }
+
