@@ -88,9 +88,9 @@ TEST_CASE("Test different amounts of whitespace.", TOKENIZE) {
 TEST_CASE("Test comments.", TOKENIZE) {
   std::stringstream stream("abc ;\n efg\nghi;asdasd asdasd\n");
   std::vector<Token> expected = {
-    Token(ATOM, "abc", 2),
-    Token(ATOM, "def", 4),
-    Token(ATOM, "ghi", 4)
+    Token(ATOM, "abc", 1),
+    Token(ATOM, "efg", 2),
+    Token(ATOM, "ghi", 3)
   };
   std::vector<Token> tokens = tokenize(stream);
   REQUIRE(tokens == expected);

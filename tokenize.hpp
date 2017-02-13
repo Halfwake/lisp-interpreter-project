@@ -8,6 +8,7 @@ namespace token {
   class Token {
   public:
     Token(Type type, std::string text, size_t lineNumber);
+    Token(const Token & other);
     Type getType() const;
     std::string getText() const;
     size_t getLineNumber() const;

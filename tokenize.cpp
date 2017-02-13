@@ -2,6 +2,7 @@
 #include <string>
 #include <ostream>
 #include <cctype>
+#include <cstdio>
 
 #include "tokenize.hpp"
 
@@ -30,24 +31,40 @@ namespace token {
 	tokens.push_back(Token(CLOSE_PAREN, ")", lineNumber));
 	stream.get();
 	break;
-      case ' ':
-      case '\t':
-      case '\r':
-      case '\n':
-	while (isspace(stream.peek())) {
-	  if(stream.get() == '\n') {
-	    lineNumber++;
-	  }
-	}
+      case ';':
 	if (!word.empty()) {
 	  std::string text(word.begin(), word.end());
 	  tokens.push_back(Token(ATOM, text, lineNumber));
 	  word.clear();
 	}
+	while(stream.get() != '\n');
+	lineNumber++;
+	break;
+      case ' ':
+      case '\t':
+      case '\r':
+      case '\n':
+	if (!word.empty()) {
+	  std::string text(word.begin(), word.end());
+	  tokens.push_back(Token(ATOM, text, lineNumber));
+	  word.clear();
+	}
+	while (isspace(stream.peek())) {
+	  if(stream.get() == '\n') {
+	    lineNumber++;
+	  }
+	}
+	break;
+      case EOF:
 	break;
       default:
 	word.push_back(stream.get());
       }
+    }
+    if (!word.empty()) {
+      std::string text(word.begin(), word.end());
+      tokens.push_back(Token(ATOM, text, lineNumber));
+      word.clear();
     }
     return tokens;
   }
@@ -56,6 +73,12 @@ namespace token {
     this->type = type;
     this->text = text;
     this->lineNumber = lineNumber;
+  }
+
+  Token::Token(const Token & other) {
+    this->type = other.getType();
+    this->text = other.getText();
+    this->lineNumber = other.getLineNumber();
   }
 
   bool Token::operator==(const Token & other) const {
