@@ -86,7 +86,7 @@ namespace token {
   }
   
   bool Token::operator!=(const Token & other) const {
-    return (*this) == other;
+    return !((*this) == other);
   }
 
   Type Token::getType() const {
