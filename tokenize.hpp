@@ -2,6 +2,9 @@
 #include <string>
 #include <iostream>
 
+#IFNDEF TOKEN_H
+#define TOKEN_H
+
 namespace token {
   enum Type { OPEN_PAREN, CLOSE_PAREN, ATOM };
   
@@ -24,3 +27,4 @@ namespace token {
   std::vector<Token> tokenize(std::istream & stream);
 }
 
+#endif
