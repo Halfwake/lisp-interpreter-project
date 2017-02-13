@@ -56,15 +56,15 @@ namespace token {
 	}
 	break;
       case EOF:
+	if (!word.empty()) {
+	  std::string text(word.begin(), word.end());
+	  tokens.push_back(Token(ATOM, text, lineNumber));
+	  word.clear();
+	}
 	break;
       default:
 	word.push_back(stream.get());
       }
-    }
-    if (!word.empty()) {
-      std::string text(word.begin(), word.end());
-      tokens.push_back(Token(ATOM, text, lineNumber));
-      word.clear();
     }
     return tokens;
   }
