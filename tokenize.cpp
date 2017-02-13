@@ -13,10 +13,20 @@ namespace token {
     while (!stream.eof()) {
       switch (stream.peek()) {
       case '(':
+	if (!word.empty()) {
+	  std::string text(word.begin(), word.end());
+	  tokens.push_back(Token(ATOM, text, lineNumber));
+	  word.clear();
+	}
 	tokens.push_back(Token(OPEN_PAREN, "(", lineNumber));
 	stream.get();
 	break;
       case ')':
+	if (!word.empty()) {
+	  std::string text(word.begin(), word.end());
+	  tokens.push_back(Token(ATOM, text, lineNumber));
+	  word.clear();
+	}
 	tokens.push_back(Token(CLOSE_PAREN, ")", lineNumber));
 	stream.get();
 	break;
