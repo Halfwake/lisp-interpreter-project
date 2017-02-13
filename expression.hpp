@@ -1,3 +1,2 @@
-namespace expression {
-  typedef int Expression;
-} 
+typedef int Expression;
+
