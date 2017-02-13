@@ -22,6 +22,7 @@ TEST_CASE("Test Token equality.", TOKENIZE) {
   REQUIRE_FALSE(Token(OPEN_PAREN, "(", 1) == Token(CLOSE_PAREN, ")", 1));
   REQUIRE_FALSE(Token(OPEN_PAREN, "(", 1) == Token(OPEN_PAREN, "(", 2));
   REQUIRE_FALSE(Token(ATOM, "", 1) == Token(CLOSE_PAREN, "", 1));
+  REQUIRE(Token(ATOM, "", 1) != Token(CLOSE_PAREN, "", 1));
 }
 
 TEST_CASE("Test vector<Token> equality.", TOKENIZE) {
