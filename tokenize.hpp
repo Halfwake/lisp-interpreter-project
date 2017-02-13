@@ -2,7 +2,7 @@
 #include <string>
 #include <iostream>
 
-#IFNDEF TOKEN_H
+#ifndef TOKEN_H
 #define TOKEN_H
 
 namespace token {
