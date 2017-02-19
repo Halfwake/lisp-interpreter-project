@@ -5,8 +5,6 @@
 
 #include "expression.hpp"
 
-using expression::Expression;
-
 namespace environment {
 
   Expression & Environment::get(const Symbol symbol) {

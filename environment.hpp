@@ -8,8 +8,6 @@
 #ifndef ENVIRONMENT_H
 #define ENVIRONMENT_H
 
-using expression::Expression;
-
 namespace environment {
 
   typedef std::string Symbol;
