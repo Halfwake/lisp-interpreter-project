@@ -111,6 +111,11 @@ Expression::Expression(const std::string value) {
   this->symbol_value = value;
 }
 
+Expression::Expression(const std::vector<Expression> children) {
+  this->type = LIST;
+  this->children = children;
+}
+
 const char * InvalidTokenException::what () const noexcept {
   std::stringstream stream;
   stream << token;
