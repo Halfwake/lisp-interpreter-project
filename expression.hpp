@@ -25,6 +25,7 @@ public:
   Expression(const std::string value);
   Expression(const std::vector<Expression>);
   bool operator==(const Expression & other) const noexcept;
+  friend std::ostream & operator << (std::ostream & stream, const Expression & expr);
 private:
   AtomType type;
   bool bool_value;

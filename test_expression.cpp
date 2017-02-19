@@ -4,6 +4,7 @@
 
 #define EXPRESSION "[Expression]"
 #define MATCH "[MATCH]"
+#define PARSE "[PARSE]"
 
 #include "tokenize.hpp"
 #include "expression.hpp"
@@ -49,4 +50,21 @@ TEST_CASE("Match number tokens.", MATCH) {
   REQUIRE(match_number(Token(ATOM, "314.", 1)));
   REQUIRE_FALSE(match_number(Token(ATOM, "abc", 1)));
   REQUIRE_FALSE(match_number(Token(ATOM, ".3", 1)));
+}
+
+TEST_CASE("Typical case.", PARSE) {
+  std::vector<Token> tokens = {
+    Token(OPEN_PAREN, "(", 1),
+    Token(ATOM, "+", 1),
+    Token(ATOM, "12", 1),
+    Token(ATOM, "18", 1),
+    Token(CLOSE_PAREN, ")", 1)
+  };
+  std::vector<Expression> children = {
+    Expression("+"),
+    Expression(12 * 1.0),
+    Expression(18 * 1.0),
+  };
+  Expression expected = Expression(children);
+  REQUIRE(expected == parse_tokens(tokens));
 }

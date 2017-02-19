@@ -96,6 +96,27 @@ Expression::Expression() {
   this->type = NONE;
 }
 
+bool Expression::operator==(const Expression & other) const noexcept {
+  if (type != other.type) {
+    return false;
+  }
+  if (type == NUMBER) {
+    return number_value == other.number_value;
+  }
+  if (type == BOOL) {
+    return bool_value == other.bool_value;
+  }
+  if (type == SYMBOL) {
+    return symbol_value == other.symbol_value;
+  }
+  if (type == NONE) {
+    return true; // There's only one NONE.
+  }
+  if (type == LIST) {
+    return children == other.children;
+  }
+}
+
 Expression::Expression(double value) {
   this->type = NUMBER;
   this->number_value = value;
@@ -131,8 +152,43 @@ Expression::Expression(const Expression & other) {
   children = other.children;
 }
 
+Expression parse_tokens_iter(std::vector<token::Token> & tokens) {
+  std::vector<Expression> top;
+  /*
+  while(token.front().getType() != token::CLOSE_PAREN) {
+    top.push_back(token.pop());
+  } 
+  */ 
+  return Expression(top);
+}
+
 Expression parse_tokens(std::vector<token::Token> tokens) {
   std::vector<Expression> top;
-  
+  top.push_back(Expression("begin"));
   return Expression(top);
+}
+
+std::ostream & operator << (std::ostream & stream, const Expression & expr) {
+  if (expr.type == NONE) {
+    stream << "(None|None)";
+  } else if (expr.type == BOOL) {
+    stream << "(Bool|";
+    if (expr.bool_value) {
+      stream << "True";
+    } else {
+      stream << "False";
+    }
+    stream << ")";
+  } else if (expr.type == SYMBOL) {
+    stream << "(Symbol|" << expr.symbol_value << ")";
+  } else if (expr.type == NUMBER) {
+    stream << "(Number|" << expr.number_value << ")";
+  } else if (expr.type == LIST) {
+    stream << "(Parent|{";
+    for (auto const & child : expr.children) {
+      stream << child << "|";
+    }
+    stream << "}";
+  }
+  return stream;
 }
