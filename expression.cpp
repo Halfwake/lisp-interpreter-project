@@ -158,7 +158,7 @@ Expression parse_tokens_iter(std::vector<token::Token> & tokens) {
   while(token.front().getType() != token::CLOSE_PAREN) {
     top.push_back(token.pop());
   } 
-  */ 
+  */
   return Expression(top);
 }
 

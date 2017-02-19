@@ -1,4 +1,4 @@
-#include <vector>
+#include <list>
 #include <string>
 #include <ostream>
 #include <cctype>
@@ -7,9 +7,9 @@
 #include "tokenize.hpp"
 
 namespace token {
-  std::vector<Token> tokenize(std::istream & stream) {
-    std::vector<Token> tokens;
-    std::vector<char> word;
+  std::list<Token> tokenize(std::istream & stream) {
+    std::list<Token> tokens;
+    std::list<char> word;
     size_t lineNumber = 1;
     while (!stream.eof()) {
       switch (stream.peek()) {

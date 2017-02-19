@@ -25,42 +25,42 @@ TEST_CASE("Test Token equality.", TOKENIZE) {
   REQUIRE(Token(ATOM, "", 1) != Token(CLOSE_PAREN, "", 1));
 }
 
-TEST_CASE("Test vector<Token> equality.", TOKENIZE) {
-  std::vector<Token> first  = {
+TEST_CASE("Test list<Token> equality.", TOKENIZE) {
+  std::list<Token> first  = {
     Token(OPEN_PAREN, "(", 1),
     Token(ATOM, "12", 1),
     Token(ATOM, "34", 1),
     Token(CLOSE_PAREN, ")", 1)
   };
-  std::vector<Token> same  = {
+  std::list<Token> same  = {
     Token(OPEN_PAREN, "(", 1),
     Token(ATOM, "12", 1),
     Token(ATOM, "34", 1),
     Token(CLOSE_PAREN, ")", 1)
   };
-  std::vector<Token> altered  = {
+  std::list<Token> altered  = {
     Token(OPEN_PAREN, "(", 1),
     Token(ATOM, "12", 1),
     Token(CLOSE_PAREN, ")", 1)
   };
   REQUIRE(first == same);
   REQUIRE_FALSE(first == altered);
-  std::vector<Token> tiny = {};
-  std::vector<Token> big = { Token(OPEN_PAREN, "(", 1) };
+  std::list<Token> tiny = {};
+  std::list<Token> big = { Token(OPEN_PAREN, "(", 1) };
   REQUIRE_FALSE(tiny == big);
   REQUIRE_FALSE(big == tiny);
 }
 
 TEST_CASE("Test empty stream.", TOKENIZE) {
   std::stringstream stream;
-  std::vector<Token> tokens = tokenize(stream);
+  std::list<Token> tokens = tokenize(stream);
   REQUIRE(tokens.empty());
 }
 
 TEST_CASE("Test typical case.", TOKENIZE) {
   std::stringstream stream("(+ 12 34 (* 56 78))");
-  std::vector<Token> tokens = tokenize(stream);
-  std::vector<Token> expected = {
+  std::list<Token> tokens = tokenize(stream);
+  std::list<Token> expected = {
     Token(OPEN_PAREN, "(", 1),
     Token(ATOM, "+", 1),
     Token(ATOM, "12", 1),
@@ -77,8 +77,8 @@ TEST_CASE("Test typical case.", TOKENIZE) {
 
 TEST_CASE("Test different amounts of whitespace.", TOKENIZE) {
   std::stringstream stream("  \r\n\t  abc\n\ndef\t\tghi");
-  std::vector<Token> tokens = tokenize(stream);
-  std::vector<Token> expected = {
+  std::list<Token> tokens = tokenize(stream);
+  std::list<Token> expected = {
     Token(ATOM, "abc", 2),
     Token(ATOM, "def", 4),
     Token(ATOM, "ghi", 4)
@@ -88,11 +88,11 @@ TEST_CASE("Test different amounts of whitespace.", TOKENIZE) {
 
 TEST_CASE("Test comments.", TOKENIZE) {
   std::stringstream stream("abc ;\n efg\nghi;asdasd asdasd\n");
-  std::vector<Token> expected = {
+  std::list<Token> expected = {
     Token(ATOM, "abc", 1),
     Token(ATOM, "efg", 2),
     Token(ATOM, "ghi", 3)
   };
-  std::vector<Token> tokens = tokenize(stream);
+  std::list<Token> tokens = tokenize(stream);
   REQUIRE(tokens == expected);
 }

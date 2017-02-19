@@ -1,4 +1,4 @@
-#include <vector>
+#include <list>
 #include <string>
 #include <iostream>
 
@@ -24,7 +24,7 @@ namespace token {
     size_t lineNumber;
   };
 
-  std::vector<Token> tokenize(std::istream & stream);
+  std::list<Token> tokenize(std::istream & stream);
 }
 
 #endif
