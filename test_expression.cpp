@@ -47,5 +47,6 @@ TEST_CASE("Match number tokens.", MATCH) {
   REQUIRE(match_number(Token(ATOM, "314", 1)));
   REQUIRE(match_number(Token(ATOM, "3.14", 1)));
   REQUIRE(match_number(Token(ATOM, "314.", 1)));
+  REQUIRE_FALSE(match_number(Token(ATOM, "abc", 1)));
   REQUIRE_FALSE(match_number(Token(ATOM, ".3", 1)));
 }
