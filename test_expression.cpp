@@ -53,14 +53,14 @@ TEST_CASE("Match number tokens.", MATCH) {
 }
 
 TEST_CASE("Typical case.", PARSE) {
-  std::vector<Token> tokens = {
+  std::list<Token> tokens = {
     Token(OPEN_PAREN, "(", 1),
     Token(ATOM, "+", 1),
     Token(ATOM, "12", 1),
     Token(ATOM, "18", 1),
     Token(CLOSE_PAREN, ")", 1)
   };
-  std::vector<Expression> children = {
+  std::list<Expression> children = {
     Expression("+"),
     Expression(12 * 1.0),
     Expression(18 * 1.0),

@@ -132,7 +132,7 @@ Expression::Expression(const std::string value) {
   this->symbol_value = value;
 }
 
-Expression::Expression(const std::vector<Expression> children) {
+Expression::Expression(const std::list<Expression> children) {
   this->type = LIST;
   this->children = children;
 }
@@ -152,8 +152,8 @@ Expression::Expression(const Expression & other) {
   children = other.children;
 }
 
-Expression parse_tokens_iter(std::vector<token::Token> & tokens) {
-  std::vector<Expression> top;
+Expression parse_tokens_iter(std::list<token::Token> & tokens) {
+  std::list<Expression> top;
   /*
   while(token.front().getType() != token::CLOSE_PAREN) {
     top.push_back(token.pop());
@@ -162,8 +162,8 @@ Expression parse_tokens_iter(std::vector<token::Token> & tokens) {
   return Expression(top);
 }
 
-Expression parse_tokens(std::vector<token::Token> tokens) {
-  std::vector<Expression> top;
+Expression parse_tokens(std::list<token::Token> tokens) {
+  std::list<Expression> top;
   top.push_back(Expression("begin"));
   return Expression(top);
 }

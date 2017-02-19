@@ -1,5 +1,5 @@
 #include <string>
-#include <vector>
+#include <list>
 #include <exception>
 #include <stdexcept>
 
@@ -23,7 +23,7 @@ public:
   Expression(bool value);
   Expression(double value);
   Expression(const std::string value);
-  Expression(const std::vector<Expression>);
+  Expression(const std::list<Expression>);
   bool operator==(const Expression & other) const noexcept;
   friend std::ostream & operator << (std::ostream & stream, const Expression & expr);
 private:
@@ -31,7 +31,7 @@ private:
   bool bool_value;
   double number_value;
   std::string symbol_value;
-  std::vector<Expression> children;
+  std::list<Expression> children;
 };
 
 class InvalidTokenException : public std::exception {
@@ -51,6 +51,6 @@ bool match_bool(token::Token token);
 bool match_none(token::Token token);
 bool match_number(token::Token token);
 
-Expression parse_tokens(std::vector<token::Token> tokens);
+Expression parse_tokens(std::list<token::Token> tokens);
 
 #endif
