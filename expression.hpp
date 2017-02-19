@@ -13,11 +13,13 @@ enum AtomType {
   BOOL,
   SYMBOL,
   NUMBER,
+  LIST
 };
 
 class Expression {
 public:
   Expression();
+  Expression(const Expression & other);
   Expression(bool value);
   Expression(double value);
   Expression(const std::string value);
@@ -28,6 +30,7 @@ private:
   bool bool_value;
   double number_value;
   std::string symbol_value;
+  std::vector<Expression> children;
 };
 
 class InvalidTokenException : public std::exception {
@@ -46,5 +49,7 @@ bool match_close(token::Token token);
 bool match_bool(token::Token token);
 bool match_none(token::Token token);
 bool match_number(token::Token token);
+
+Expression parse_tokens(std::vector<token::Token> tokens);
 
 #endif

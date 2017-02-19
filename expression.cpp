@@ -122,3 +122,17 @@ const char * InvalidTokenException::what () const noexcept {
   std::string output = stream.str();
   return output.c_str();
 }
+
+Expression::Expression(const Expression & other) {
+  type = other.type;
+  bool_value = other.bool_value;
+  number_value = other.number_value;
+  symbol_value = other.symbol_value;
+  children = other.children;
+}
+
+Expression parse_tokens(std::vector<token::Token> tokens) {
+  std::vector<Expression> top;
+  
+  return Expression(top);
+}
