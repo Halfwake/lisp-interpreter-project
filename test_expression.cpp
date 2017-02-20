@@ -88,3 +88,33 @@ TEST_CASE("Typical case.", PARSE) {
   Expression expected = Expression(top);
   REQUIRE(expected == parse_tokens(tokens));
 }
+
+TEST_CASE("Harder case.", PARSE) {
+  std::list<Token> tokens = {
+    Token(OPEN_PAREN, "(", 1),
+    Token(ATOM, "+", 1),
+    Token(OPEN_PAREN, "(", 1),
+    Token(ATOM, "-", 1),
+    Token(ATOM, "pi", 1),
+    Token(ATOM, "1.5", 1),
+    Token(CLOSE_PAREN, ")", 1),
+    Token(ATOM, "3", 1),
+    Token(CLOSE_PAREN, ")", 1)
+  };
+  std::list<Expression> deep_children = {
+    Expression(std::string("-")),
+    Expression(std::string("pi")),
+    Expression(1.5 * 1.0)
+  };
+  std::list<Expression> shallow_children = {
+    Expression(std::string("+")),
+    Expression(deep_children),
+    Expression(3 * 1.0)
+  };
+  std::list<Expression> top = {
+    Expression(std::string("begin")),
+    Expression(shallow_children)
+  };
+  Expression expected = Expression(top);
+  REQUIRE(expected == parse_tokens(tokens));
+}
