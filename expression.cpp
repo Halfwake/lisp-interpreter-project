@@ -189,6 +189,7 @@ Expression parse_tokens_iter(std::list<token::Token> & tokens) {
       tokens.pop_front();
     }
   }
+  // TODO! This should return an error if the vector is empty.
   throw InvalidTokenException(token::Token(token::ATOM, "TODO", 0));
 }
 
