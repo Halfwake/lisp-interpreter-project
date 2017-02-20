@@ -32,16 +32,26 @@ bool match_bool(token::Token token) {
   bool correct_type = token.getType() == token::ATOM;
   bool true_string  = token.getText() == "True";
   bool false_string = token.getText() == "False";
+  if (!correct_type && (true_string || false_string)) {
+    throw InvalidTokenException(token);
+  }
   return correct_type && (true_string || false_string);
 }
 
 bool match_none(token::Token token) {
   bool correct_type = token.getType() == token::ATOM;
   bool none_string = token.getText() == "None";
+  if (!correct_type && none_string) {
+    throw InvalidTokenException(token);
+  }
   return correct_type && none_string;
 }
 
 bool match_number(token::Token token) {
+  // TODO! Make this less of a hack.
+  if (token.getText() == "+" or token.getText() == "-") {
+    return false;
+  }
   bool first_char = true;
   bool hit_dot = false;
   bool hit_e = false;
@@ -91,6 +101,14 @@ bool match_number(token::Token token) {
   }
 }
 
+bool match_symbol(token::Token token) {
+  // TODO! Check if symbol name begins with digit.
+  bool not_number = !match_number(token);
+  bool not_none = !match_none(token);
+  bool not_bool = !match_bool(token);
+  return not_number && not_none && not_bool;
+}
+
 
 Expression::Expression() {
   this->type = NONE;
@@ -115,6 +133,7 @@ bool Expression::operator==(const Expression & other) const noexcept {
   if (type == LIST) {
     return children == other.children;
   }
+  return false;
 }
 
 Expression::Expression(double value) {
@@ -152,19 +171,63 @@ Expression::Expression(const Expression & other) {
   children = other.children;
 }
 
+AtomType Expression::getType() const {
+  return type;
+}
+
 Expression parse_tokens_iter(std::list<token::Token> & tokens) {
   std::list<Expression> top;
-  /*
-  while(token.front().getType() != token::CLOSE_PAREN) {
-    top.push_back(token.pop());
-  } 
-  */
-  return Expression(top);
+  while (!tokens.empty()) {
+    if (match_open(tokens.front())) {
+      tokens.pop_front();
+      top.push_back(parse_tokens_iter(tokens));
+    } else if (match_close(tokens.front())) {
+      tokens.pop_front();
+      return Expression(top);
+    } else {
+      top.push_back(parse_atom(tokens.front()));
+      tokens.pop_front();
+    }
+  }
+  //TODO! throw InvalidTokenException(token);
+}
+
+Expression parse_atom(token::Token token) {
+  if (match_bool(token)) {
+    if (token.getText() == "True") {
+      return Expression(true);
+    } else if (token.getText() == "False") {
+      return Expression(false);
+    } else {
+      throw InvalidTokenException(token);
+    }
+  } else if (match_none(token)) {
+    return Expression();
+  } else if (match_number(token)) {
+    std::stringstream stream(token.getText());
+    double value;
+    stream >> value;
+    // TODO! This should check if we were actually given a
+    // double, since match_number might not be valid.
+    return Expression(value);
+  } else if (match_symbol(token)) {
+    return Expression(std::string(token.getText()));
+  }
+  throw InvalidTokenException(token);
 }
 
 Expression parse_tokens(std::list<token::Token> tokens) {
   std::list<Expression> top;
-  top.push_back(Expression("begin"));
+  top.push_back(Expression(std::string("begin")));
+  while (!tokens.empty()) {
+    if (match_open(tokens.front())) {
+      tokens.pop_front();
+      top.push_back(parse_tokens_iter(tokens));
+    } else {
+      top.push_back(parse_atom(tokens.front()));
+      tokens.pop_front();
+    }
+  }
   return Expression(top);
 }
 
