@@ -37,7 +37,7 @@ namespace token {
 	  tokens.push_back(Token(ATOM, text, lineNumber));
 	  word.clear();
 	}
-	while(stream.get() != '\n');
+	while((stream.get() != '\n') && !stream.eof());
 	lineNumber++;
 	break;
       case ' ':
