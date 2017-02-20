@@ -151,7 +151,7 @@ Expression::Expression(const std::string value) {
   this->symbol_value = value;
 }
 
-Expression::Expression(const std::list<Expression> children) {
+Expression::Expression(const std::vector<Expression> children) {
   this->type = LIST;
   this->children = children;
 }
@@ -176,7 +176,7 @@ AtomType Expression::getType() const {
 }
 
 Expression parse_tokens_iter(std::list<token::Token> & tokens) {
-  std::list<Expression> top;
+  std::vector<Expression> top;
   while (!tokens.empty()) {
     if (match_open(tokens.front())) {
       tokens.pop_front();
@@ -217,7 +217,7 @@ Expression parse_atom(token::Token token) {
 }
 
 Expression parse_tokens(std::list<token::Token> tokens) {
-  std::list<Expression> top;
+  std::vector<Expression> top;
   top.push_back(Expression(std::string("begin")));
   while (!tokens.empty()) {
     if (match_open(tokens.front())) {
@@ -256,7 +256,7 @@ std::ostream & operator << (std::ostream & stream, const Expression & expr) {
   return stream;
 }
 
-std::list<Expression> Expression::getChildren() const {
+std::vector<Expression> Expression::getChildren() const {
   return this->children;
 }
 

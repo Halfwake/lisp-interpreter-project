@@ -62,7 +62,7 @@ TEST_CASE("Check expression type.", EXPR) {
   REQUIRE(Expression(true).getType() == BOOL);
   REQUIRE(Expression(std::string("begin")).getType() == SYMBOL);
   REQUIRE(Expression(3.14).getType() == NUMBER);
-  std::list<Expression> children = {
+  std::vector<Expression> children = {
     Expression()
   };
   REQUIRE(Expression(children).getType() == LIST);
@@ -76,12 +76,12 @@ TEST_CASE("Typical case.", PARSE) {
     Token(ATOM, "18", 1),
     Token(CLOSE_PAREN, ")", 1)
   };
-  std::list<Expression> children = {
+  std::vector<Expression> children = {
     Expression(std::string("+")),
     Expression(12 * 1.0),
     Expression(18 * 1.0),
   };
-  std::list<Expression> top = {
+  std::vector<Expression> top = {
     Expression(std::string("begin")),
     Expression(children)
   };
@@ -101,17 +101,17 @@ TEST_CASE("Harder case.", PARSE) {
     Token(ATOM, "3", 1),
     Token(CLOSE_PAREN, ")", 1)
   };
-  std::list<Expression> deep_children = {
+  std::vector<Expression> deep_children = {
     Expression(std::string("-")),
     Expression(std::string("pi")),
     Expression(1.5 * 1.0)
   };
-  std::list<Expression> shallow_children = {
+  std::vector<Expression> shallow_children = {
     Expression(std::string("+")),
     Expression(deep_children),
     Expression(3 * 1.0)
   };
-  std::list<Expression> top = {
+  std::vector<Expression> top = {
     Expression(std::string("begin")),
     Expression(shallow_children)
   };

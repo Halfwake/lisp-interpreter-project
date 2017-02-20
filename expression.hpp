@@ -1,5 +1,5 @@
 #include <string>
-#include <list>
+#include <vector>
 #include <exception>
 #include <stdexcept>
 
@@ -23,9 +23,9 @@ public:
   Expression(bool value);
   Expression(double value);
   Expression(const std::string value);
-  Expression(const std::list<Expression>);
+  Expression(const std::vector<Expression>);
   AtomType getType() const;
-  std::list<Expression> getChildren() const;
+  std::vector<Expression> getChildren() const;
   bool getBool() const;
   double getNumber() const;
   std::string getSymbol() const;
@@ -36,7 +36,7 @@ private:
   bool bool_value;
   double number_value;
   std::string symbol_value;
-  std::list<Expression> children;
+  std::vector<Expression> children;
 };
 
 class InvalidTokenException : public std::exception {
