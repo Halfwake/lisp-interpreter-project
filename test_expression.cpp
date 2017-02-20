@@ -5,6 +5,7 @@
 #define EXPRESSION "[Expression]"
 #define MATCH "[MATCH]"
 #define PARSE "[PARSE]"
+#define EXPR "[Expression]"
 
 #include "tokenize.hpp"
 #include "expression.hpp"
@@ -52,6 +53,21 @@ TEST_CASE("Match number tokens.", MATCH) {
   REQUIRE_FALSE(match_number(Token(ATOM, ".3", 1)));
 }
 
+TEST_CASE("Check symbol type", EXPR) {
+  REQUIRE(Expression(std::string("some-symbol")).getType() == SYMBOL);
+}
+
+TEST_CASE("Check expression type.", EXPR) {
+  REQUIRE(Expression().getType() == NONE);
+  REQUIRE(Expression(true).getType() == BOOL);
+  REQUIRE(Expression(std::string("begin")).getType() == SYMBOL);
+  REQUIRE(Expression(3.14).getType() == NUMBER);
+  std::list<Expression> children = {
+    Expression()
+  };
+  REQUIRE(Expression(children).getType() == LIST);
+}
+
 TEST_CASE("Typical case.", PARSE) {
   std::list<Token> tokens = {
     Token(OPEN_PAREN, "(", 1),
@@ -61,10 +77,14 @@ TEST_CASE("Typical case.", PARSE) {
     Token(CLOSE_PAREN, ")", 1)
   };
   std::list<Expression> children = {
-    Expression("+"),
+    Expression(std::string("+")),
     Expression(12 * 1.0),
     Expression(18 * 1.0),
   };
-  Expression expected = Expression(children);
+  std::list<Expression> top = {
+    Expression(std::string("begin")),
+    Expression(children)
+  };
+  Expression expected = Expression(top);
   REQUIRE(expected == parse_tokens(tokens));
 }
