@@ -22,7 +22,7 @@ namespace environment {
    std::map<Symbol, Expression> map;
  public:
    Expression & get(const Symbol symbol);
-   void set(const Symbol symbol, const Expression expr);
+   void set(const Symbol symbol, Expression expr);
  };
 
 

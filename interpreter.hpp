@@ -31,4 +31,31 @@ Expression eval_product(Expression expr, environment::Environment & env);
 Expression eval_ratio(Expression expr, environment::Environment & env);
 
 
+class BadArgumentTypeException : public std::exception {
+public:
+  BadArgumentTypeException (Expression expression) : expression(expression) {};
+  Expression getExpression();
+  const char * what() const noexcept;
+private:
+  Expression expression;
+};
+
+class BadArgumentCountException : public std::exception {
+public:
+  BadArgumentCountException (Expression expression) : expression(expression) {};
+  Expression getExpression();
+  const char * what() const noexcept;
+private:
+  Expression expression;
+};
+
+class InvalidExpressionException : public std::exception {
+public:
+  InvalidExpressionException (Expression expression) : expression(expression) {};
+  Expression getExpression();
+  const char * what() const noexcept;
+private:
+  Expression expression;
+};
+
 #endif

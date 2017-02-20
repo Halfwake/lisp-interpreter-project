@@ -189,7 +189,7 @@ Expression parse_tokens_iter(std::list<token::Token> & tokens) {
       tokens.pop_front();
     }
   }
-  //TODO! throw InvalidTokenException(token);
+  throw InvalidTokenException(token::Token(token::ATOM, "TODO", 0));
 }
 
 Expression parse_atom(token::Token token) {

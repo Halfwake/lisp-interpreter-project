@@ -15,7 +15,7 @@ namespace environment {
     }
   }
 
-  void Environment::set(const Symbol symbol, const Expression expr) {
+  void Environment::set(const Symbol symbol, Expression expr) {
     map[symbol] = expr;
   }
 
