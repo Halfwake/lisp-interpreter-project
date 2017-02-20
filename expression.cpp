@@ -267,6 +267,6 @@ double Expression::getNumber() const {
   return number_value;
 }
 
-std::string Expression::getString() const {
+std::string Expression::getSymbol() const {
   return symbol_value;
 }
