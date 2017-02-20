@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=	-std=c++11 -Wall
+CFLAGS=	-std=c++11 -Wall -g
 
 test: test_tokenize  test_expression #test_environment
 	./test_tokenize
