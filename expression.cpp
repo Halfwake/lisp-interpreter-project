@@ -255,3 +255,18 @@ std::ostream & operator << (std::ostream & stream, const Expression & expr) {
   }
   return stream;
 }
+
+std::list<Expression> Expression::getChildren() const {
+  return this->children;
+}
+
+bool Expression::getBool() const {
+  return bool_value;
+}
+double Expression::getNumber() const {
+  return number_value;
+}
+
+std::string Expression::getString() const {
+  return symbol_value;
+}

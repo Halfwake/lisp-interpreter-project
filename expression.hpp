@@ -25,6 +25,10 @@ public:
   Expression(const std::string value);
   Expression(const std::list<Expression>);
   AtomType getType() const;
+  std::list<Expression> getChildren() const;
+  bool getBool() const;
+  double getNumber() const;
+  std::string getString() const;
   bool operator==(const Expression & other) const noexcept;
   friend std::ostream & operator << (std::ostream & stream, const Expression & expr);
 private:
