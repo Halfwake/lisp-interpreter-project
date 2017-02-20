@@ -100,6 +100,17 @@ TEST_CASE("Test comments.", TOKENIZE) {
   REQUIRE(tokens == expected);
 }
 
+TEST_CASE("Test single value.", TOKENIZE) {
+  std::stringstream stream("(True)");
+  std::list<Token> expected = {
+    Token(OPEN_PAREN, "(", 1),
+    Token(ATOM, "True", 1),
+    Token(CLOSE_PAREN, ")", 1)
+  };
+  std::list<Token> tokens = tokenize(stream);
+  REQUIRE(tokens == expected);
+}
+
 #define EXPRESSION "[Expression]"
 #define MATCH "[MATCH]"
 #define PARSE "[PARSE]"
@@ -224,6 +235,20 @@ TEST_CASE("Harder case.", PARSE) {
   std::vector<Expression> top = {
     Expression(std::string("begin")),
     Expression(shallow_children)
+  };
+  Expression expected = Expression(top);
+  REQUIRE(expected == parse_tokens(tokens));
+}
+
+TEST_CASE("Simple value.", PARSE) {
+  std::list<Token> tokens = {
+    Token(OPEN_PAREN, "(", 1),
+    Token(ATOM, "True", 1),
+    Token(CLOSE_PAREN, ")", 1)
+  };
+  std::vector<Expression> top = {
+    Expression(std::string("begin")),
+    Expression(true)
   };
   Expression expected = Expression(top);
   REQUIRE(expected == parse_tokens(tokens));
