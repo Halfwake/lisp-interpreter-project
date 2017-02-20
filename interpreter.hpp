@@ -24,11 +24,15 @@ Expression eval_l_than(Expression expr, environment::Environment & env);
 Expression eval_le_than(Expression expr, environment::Environment & env);
 Expression eval_g_than(Expression expr, environment::Environment & env);
 Expression eval_ge_than(Expression expr, environment::Environment & env);
-Expression eval_eq_than(Expression expr, environment::Environment & env);
-Expression eval_sum_than(Expression expr, environment::Environment & env);
+Expression eval_eq(Expression expr, environment::Environment & env);
+Expression eval_sum(Expression expr, environment::Environment & env);
 Expression eval_diff(Expression expr, environment::Environment & env);
 Expression eval_product(Expression expr, environment::Environment & env);
 Expression eval_ratio(Expression expr, environment::Environment & env);
+
+Expression eval_define(Expression expr, environment::Environment & env);
+Expression eval_begin(Expression expr, environment::Environment & env);
+Expression eval_if(Expression expr, environment::Environment & env);
 
 
 class BadArgumentTypeException : public std::exception {

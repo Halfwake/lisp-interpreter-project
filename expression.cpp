@@ -1,4 +1,5 @@
 #include <sstream>
+#include <cctype>
 
 #include "expression.hpp"
 
@@ -106,7 +107,8 @@ bool match_symbol(token::Token token) {
   bool not_number = !match_number(token);
   bool not_none = !match_none(token);
   bool not_bool = !match_bool(token);
-  return not_number && not_none && not_bool;
+  bool first_alpha = !isdigit(token.getText().at(0));
+  return not_number && not_none && not_bool && first_alpha;
 }
 
 
@@ -183,6 +185,10 @@ Expression parse_tokens_iter(std::list<token::Token> & tokens) {
       top.push_back(parse_tokens_iter(tokens));
     } else if (match_close(tokens.front())) {
       tokens.pop_front();
+      if (top.size() == 0) {
+	// TODO! This should return an error if the vector is empty.
+	throw InvalidTokenException(token::Token(token::ATOM, "TODO", 0));
+      }
       return Expression(top);
     } else {
       top.push_back(parse_atom(tokens.front()));
@@ -218,12 +224,23 @@ Expression parse_atom(token::Token token) {
 }
 
 Expression parse_tokens(std::list<token::Token> tokens) {
+  if (tokens.empty()) {
+    //TODO Make betterr eror message
+    throw InvalidTokenException(token::Token(token::ATOM, "too many tokens", 1));
+  }
+  if ((tokens.size() == 1) && (match_symbol(tokens.front()))) {
+    //TODO Make betterr eror message
+    throw InvalidTokenException(token::Token(token::ATOM, "too many tokens", 1));
+  }
   std::vector<Expression> top;
   top.push_back(Expression(std::string("begin")));
   while (!tokens.empty()) {
     if (match_open(tokens.front())) {
       tokens.pop_front();
       top.push_back(parse_tokens_iter(tokens));
+    } else if (match_close(tokens.front())) {
+      //TODO Make betterr eror message
+      throw InvalidTokenException(token::Token(token::ATOM, "too many tokens", 1));
     } else {
       top.push_back(parse_atom(tokens.front()));
       tokens.pop_front();
