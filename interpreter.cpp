@@ -4,13 +4,14 @@
 #include <vector>
 #include <list>
 #include <sstream>
+#include <math.h>
 
 #include "expression.hpp"
 #include "environment.hpp"
 #include "tokenize.hpp"
 
 Interpreter::Interpreter() {
-  environment.set("pi", 3.1415); //TODO! Redefine this with atan or whatever.
+  environment.set("pi", atan2(0, -1));
 }
 
 bool Interpreter::parse(std::istream & expression) noexcept {
