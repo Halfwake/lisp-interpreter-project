@@ -54,6 +54,18 @@ TEST_CASE("Test list<Token> equality.", TOKENIZE) {
   REQUIRE_FALSE(big == tiny);
 }
 
+TEST_CASE("Test logic.", TOKENIZE) {
+  std::stringstream stream("(not True)");
+  std::list<Token> expected = {
+    Token(OPEN_PAREN, "(", 1),
+    Token(ATOM, "not", 1),
+    Token(ATOM, "True", 1),
+    Token(CLOSE_PAREN, ")", 1)
+  };
+  std::list<Token> tokens = tokenize(stream);
+  REQUIRE(tokens == expected);
+}
+
 TEST_CASE("Test empty stream.", TOKENIZE) {
   std::stringstream stream;
   std::list<Token> tokens = tokenize(stream);
@@ -236,6 +248,28 @@ TEST_CASE("Harder case.", PARSE) {
     Expression(std::string("begin")),
     Expression(shallow_children)
   };
+  Expression expected = Expression(top);
+  REQUIRE(expected == parse_tokens(tokens));
+}
+
+TEST_CASE("Boolean expression.", PARSE) {
+  std::list<Token> tokens = {
+    Token(OPEN_PAREN, "(", 1),
+    Token(ATOM, "not", 1),
+    Token(ATOM, "True", 1),
+    Token(CLOSE_PAREN, ")", 1)
+  };
+
+  std::vector<Expression> children = {
+    Expression(std::string("not")),
+    Expression(true)
+  };
+
+  std::vector<Expression> top = {
+    Expression(std::string("begin")),
+    Expression(children)
+  };
+
   Expression expected = Expression(top);
   REQUIRE(expected == parse_tokens(tokens));
 }
