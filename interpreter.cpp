@@ -14,12 +14,12 @@ Interpreter::Interpreter() {
   environment.set("pi", atan2(0, -1));
 }
 
-bool Interpreter::parse(std::istream & expression) noexcept {
+bool Interpreter::parse(std::istream & expr) noexcept {
   try {
-    std::list<token::Token> tokens = token::tokenize(expression);
-    this->expression = parse_tokens(tokens);
-    return this->expression.getChildren().size() != 0;
-  } catch (InvalidTokenException e) {
+    std::list<token::Token> tokens = token::tokenize(expr);
+    expression = parse_tokens(tokens);
+    return expression.getChildren().size() != 0;
+   } catch (InvalidTokenException e) {
     return false;
   }
 }
@@ -36,43 +36,44 @@ Expression eval_iter(Expression expr, environment::Environment & env) {
     if (children.size() == 0) {
       throw InvalidExpressionException(expr);
     } else if (children.size() == 1) {
-      eval_iter(children.front(), env);
+      return eval_iter(children.front(), env);
     } else if (children.front().getType() != SYMBOL) {
       throw InvalidExpressionException(expr);
     } else if (children.front().getSymbol() == "not") {
-      eval_not(expr, env);
+      return eval_not(expr, env);
     } else if (children.front().getSymbol() == "and") {
-      eval_and(expr, env);
+      return eval_and(expr, env);
     } else if (children.front().getSymbol() == "or") {
-      eval_or(expr, env);
+      return eval_or(expr, env);
     } else if (children.front().getSymbol() == "<") {
-      eval_l_than(expr, env);
+      return eval_l_than(expr, env);
     } else if (children.front().getSymbol() == "<=") {
-      eval_le_than(expr, env);
+      return eval_le_than(expr, env);
     } else if (children.front().getSymbol() == ">") {
-      eval_g_than(expr, env);
+      return eval_g_than(expr, env);
     } else if (children.front().getSymbol() == ">=") {
-      eval_ge_than(expr, env);
+      return eval_ge_than(expr, env);
     } else if (children.front().getSymbol() == "==") {
-      eval_eq(expr, env);
+      return eval_eq(expr, env);
     } else if (children.front().getSymbol() == "+") {
-      eval_sum(expr, env);
+      return eval_sum(expr, env);
     } else if (children.front().getSymbol() == "-") {
-      eval_diff(expr, env);
+      return eval_diff(expr, env);
     } else if (children.front().getSymbol() == "*") {
-      eval_product(expr, env);
+      return eval_product(expr, env);
     } else if (children.front().getSymbol() == "/") {
-      eval_diff(expr, env);
+      return eval_diff(expr, env);
     } else if (children.front().getSymbol() == "define") {
-      eval_define(expr, env);
+      return eval_define(expr, env);
     } else if (children.front().getSymbol() == "begin") {
-      eval_begin(expr, env);
+      return eval_begin(expr, env);
     } else if (children.front().getSymbol() == "if") {
-      eval_if(expr, env);
+      return eval_if(expr, env);
     } else {
       throw InvalidExpressionException(expr);
     }
   }
+  throw InvalidExpressionException(expr);
 }
 
 Expression eval_not(Expression expr, environment::Environment & env) {
@@ -316,6 +317,7 @@ Expression eval_define(Expression expr, environment::Environment & env) {
   std::string symbol = simplified_expr.at(1).getSymbol();
   Expression value = simplified_expr.at(2);
   env.set(symbol, value);
+  return Expression();
 }
 
 Expression eval_begin(Expression expr, environment::Environment & env) {
