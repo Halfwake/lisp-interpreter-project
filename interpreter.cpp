@@ -368,6 +368,10 @@ Expression eval_define(Expression expr, environment::Environment & env) {
     throw BadArgumentTypeException(expr);
   }
 
+  if (reserved_symbol(expr.getChildren().at(1).getSymbol())) {
+    throw BadArgumentTypeException(expr);
+  }
+
   std::string symbol = expr.getChildren().at(1).getSymbol();
   Expression value = eval_iter(expr.getChildren().at(2), env);
   env.set(symbol, value);
