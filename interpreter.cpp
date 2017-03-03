@@ -1,4 +1,5 @@
 #include "interpreter.hpp"
+#include "interpreter_semantic_error.hpp"
 
 #include <istream>
 #include <vector>
@@ -25,7 +26,17 @@ bool Interpreter::parse(std::istream & expr) noexcept {
 }
 
 Expression Interpreter::eval() {
-  return eval_iter(expression, environment);
+  try {
+    return eval_iter(expression, environment);
+  } catch (InvalidExpressionException e) {
+    throw InterpreterSemanticError("Expression could not be evaluated.");
+  } catch (BadArgumentCountException e) {
+    throw InterpreterSemanticError("Bad argument count.");
+  } catch (BadArgumentTypeException e) {
+    throw InterpreterSemanticError("Argumetn of wrong type.");
+  } catch (environment::LookupException e) {
+    throw InterpreterSemanticError("Unbound variable.");
+  }
 }
 
 bool reserved_symbol(std::string symbol) {
@@ -56,7 +67,7 @@ bool reserved_symbol(std::string symbol) {
 
 Expression eval_iter(Expression expr, environment::Environment & env) {
   if (expr.getType() != LIST) {
-    if (expr.getType() == SYMBOL && !reserved_symbol(expr.getSymbol())) {
+    if ((expr.getType() == SYMBOL) && (!reserved_symbol(expr.getSymbol()))) {
       return env.get(expr.getSymbol());
     } else {
       return expr;
@@ -128,6 +139,7 @@ Expression eval_and(Expression expr, environment::Environment & env) {
   if (!is_all_type(BOOL, simplified_expr)) {
     throw BadArgumentTypeException(expr);
   }
+  simplified_expr.erase(simplified_expr.begin());
   bool accum = true;
   for (auto & child : simplified_expr) {
     accum = accum && child.getBool();
@@ -160,6 +172,7 @@ Expression eval_or(Expression expr, environment::Environment & env) {
   if (!is_all_type(BOOL, simplified_expr)) {
     throw BadArgumentTypeException(expr);
   }
+  simplified_expr.erase(simplified_expr.begin());
   bool accum = false;
   for (auto & child : simplified_expr) {
     accum = accum || child.getBool();
@@ -258,6 +271,7 @@ Expression eval_sum(Expression expr, environment::Environment & env) {
   if(!is_all_type(NUMBER, simplified_expr)) {
     throw BadArgumentTypeException(expr);
   }
+  simplified_expr.erase(simplified_expr.begin());
   double accum = 0;
   for (auto & child : simplified_expr) {
     accum += child.getNumber();
@@ -299,9 +313,12 @@ Expression eval_product(Expression expr, environment::Environment & env) {
   if(!is_all_type(NUMBER, simplified_expr)) {
     throw BadArgumentTypeException(expr);
   }
-  Expression expr1 = simplified_expr.at(1);
-  Expression expr2 = simplified_expr.at(2);
-  return Expression(expr1.getNumber() * expr2.getNumber() * 1.0);
+  simplified_expr.erase(simplified_expr.begin());
+  double accum = 1;
+  for (auto & child : simplified_expr) {
+    accum *= child.getNumber();
+  }
+  return Expression(accum * 1.0);
 }
 
 Expression eval_ratio(Expression expr, environment::Environment & env) {
@@ -346,17 +363,15 @@ Expression eval_define(Expression expr, environment::Environment & env) {
   if (expr.getChildren().size() != 3) {
     throw BadArgumentCountException(expr);
   }
-  std::vector<Expression> simplified_expr;
-  for (auto & child : expr.getChildren()) {
-    simplified_expr.push_back(eval_iter(child, env));
-  }
+
   if (expr.getChildren().at(1).getType() != SYMBOL) {
     throw BadArgumentTypeException(expr);
   }
+
   std::string symbol = expr.getChildren().at(1).getSymbol();
-  Expression value = simplified_expr.at(2);
+  Expression value = eval_iter(expr.getChildren().at(2), env);
   env.set(symbol, value);
-  return Expression();
+  return value;
 }
 
 Expression eval_begin(Expression expr, environment::Environment & env) {
