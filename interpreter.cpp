@@ -19,7 +19,7 @@ bool Interpreter::parse(std::istream & expr) noexcept {
     std::list<token::Token> tokens = token::tokenize(expr);
     expression = parse_tokens(tokens);
     return expression.getChildren().size() != 0;
-   } catch (InvalidTokenException e) {
+  } catch (InvalidTokenException e) {
     return false;
   }
 }
@@ -28,9 +28,39 @@ Expression Interpreter::eval() {
   return eval_iter(expression, environment);
 }
 
+bool reserved_symbol(std::string symbol) {
+  std::vector<std::string> reserved = {
+    "not",
+    "and",
+    "or",
+    "<",
+    "<=",
+    ">",
+    ">=",
+    "=",
+    "+",
+    "-",
+    "*",
+    "/",
+    "define",
+    "begin",
+    "if"
+  };
+  for (auto reserved_symbol : reserved) {
+    if (symbol == reserved_symbol) {
+      return true;
+    }
+  }
+  return false;
+}
+
 Expression eval_iter(Expression expr, environment::Environment & env) {
   if (expr.getType() != LIST) {
-    return expr;
+    if (expr.getType() == SYMBOL && !reserved_symbol(expr.getSymbol())) {
+      return env.get(expr.getSymbol());
+    } else {
+      return expr;
+    }
   } else {
     std::vector<Expression> children = expr.getChildren();
     if (children.size() == 0) {
@@ -53,7 +83,7 @@ Expression eval_iter(Expression expr, environment::Environment & env) {
       return eval_g_than(expr, env);
     } else if (children.front().getSymbol() == ">=") {
       return eval_ge_than(expr, env);
-    } else if (children.front().getSymbol() == "==") {
+    } else if (children.front().getSymbol() == "=") {
       return eval_eq(expr, env);
     } else if (children.front().getSymbol() == "+") {
       return eval_sum(expr, env);
@@ -62,7 +92,7 @@ Expression eval_iter(Expression expr, environment::Environment & env) {
     } else if (children.front().getSymbol() == "*") {
       return eval_product(expr, env);
     } else if (children.front().getSymbol() == "/") {
-      return eval_diff(expr, env);
+      return eval_ratio(expr, env);
     } else if (children.front().getSymbol() == "define") {
       return eval_define(expr, env);
     } else if (children.front().getSymbol() == "begin") {
@@ -130,7 +160,7 @@ Expression eval_or(Expression expr, environment::Environment & env) {
   if (!is_all_type(BOOL, simplified_expr)) {
     throw BadArgumentTypeException(expr);
   }
-  bool accum = true;
+  bool accum = false;
   for (auto & child : simplified_expr) {
     accum = accum || child.getBool();
   }
@@ -236,19 +266,26 @@ Expression eval_sum(Expression expr, environment::Environment & env) {
 }
 
 Expression eval_diff(Expression expr, environment::Environment & env) {
-  if (expr.getChildren().size() != 3) {
-    throw BadArgumentCountException(expr);
+  if ((expr.getChildren().size() == 3) || (expr.getChildren().size() == 2)) {
+
+    std::vector<Expression> simplified_expr;
+    for (auto & child : expr.getChildren()) {
+      simplified_expr.push_back(eval_iter(child, env));
+    }
+    if(!is_all_type(NUMBER, simplified_expr)) {
+      throw BadArgumentTypeException(expr);
+    }
+    if (expr.getChildren().size() == 3) {
+      Expression expr1 = simplified_expr.at(1);
+      Expression expr2 = simplified_expr.at(2);
+      return Expression(expr1.getNumber() - expr2.getNumber() + 0.0);
+    } else {
+      Expression expr1 = simplified_expr.at(1);
+      return Expression(expr1.getNumber() * -1.0);
+    }
+  } else {
+      throw BadArgumentCountException(expr);
   }
-  std::vector<Expression> simplified_expr;
-  for (auto & child : expr.getChildren()) {
-    simplified_expr.push_back(eval_iter(child, env));
-  }
-  if(!is_all_type(NUMBER, simplified_expr)) {
-    throw BadArgumentTypeException(expr);
-  }
-  Expression expr1 = simplified_expr.at(1);
-  Expression expr2 = simplified_expr.at(2);
-  return Expression(expr1.getNumber() - expr2.getNumber() + 0.0);
 }
 
 Expression eval_product(Expression expr, environment::Environment & env) {
@@ -313,8 +350,10 @@ Expression eval_define(Expression expr, environment::Environment & env) {
   for (auto & child : expr.getChildren()) {
     simplified_expr.push_back(eval_iter(child, env));
   }
-  //TODO! Check that name is symbol.
-  std::string symbol = simplified_expr.at(1).getSymbol();
+  if (expr.getChildren().at(1).getType() != SYMBOL) {
+    throw BadArgumentTypeException(expr);
+  }
+  std::string symbol = expr.getChildren().at(1).getSymbol();
   Expression value = simplified_expr.at(2);
   env.set(symbol, value);
   return Expression();
