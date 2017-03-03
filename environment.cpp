@@ -16,7 +16,11 @@ namespace environment {
   }
 
   void Environment::set(const Symbol symbol, Expression expr) {
-    map[symbol] = expr;
+    if (map.find(symbol) == map.end()) {
+      map[symbol] = expr;
+    } else {
+      throw LookupException(symbol);
+    }
   }
 
   Symbol LookupException::getSymbol() {
