@@ -266,6 +266,40 @@ TEST_CASE("Harder case.", PARSE) {
   REQUIRE(expected == parse_tokens(tokens));
 }
 
+TEST_CASE("Boolean constants.", PARSE) {
+  std::list<Token> tokens = {
+    Token(OPEN_PAREN, "(", 1),
+    Token(ATOM, "and", 1),
+    Token(ATOM, "True", 1),
+    Token(ATOM, "False", 1),
+    Token(CLOSE_PAREN, ")", 1)
+  };
+
+  std::vector<Expression> children = {
+    Expression(std::string("and")),
+    Expression(true),
+    Expression(false)
+  };
+
+  std::vector<Expression> top = {
+    Expression(std::string("begin")),
+    Expression(children)
+  };
+  Expression expected = Expression(top);
+  REQUIRE(expected == parse_tokens(tokens));
+}
+
+TEST_CASE("Boolean token covert.", PARSE) {
+  REQUIRE(parse_atom(Token(ATOM, "True", 1)).getBool() == true);
+  REQUIRE(parse_atom(Token(ATOM, "False", 1)).getBool() == false);
+}
+
+TEST_CASE("Booleans.", PARSE) {
+  REQUIRE(Expression(true).getBool() == true);
+  REQUIRE(Expression(false).getBool() == false);
+}
+
+
 TEST_CASE("Boolean expression.", PARSE) {
   std::list<Token> tokens = {
     Token(OPEN_PAREN, "(", 1),
