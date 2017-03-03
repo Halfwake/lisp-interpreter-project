@@ -189,17 +189,26 @@ TEST_CASE("Check expression type.", EXPR) {
   REQUIRE(Expression(children).getType() == LIST);
 }
 
+// We want to support bare symbols or not?
+/*
 TEST_CASE("Bare symbol.", PARSE) {
   std::list<Token> tokens = {
     Token(ATOM, "abc", 1)
   };
+  std::vector<Expression> shallow_children = {
+    Expression(std::string("abc"))
+  };
+  std::vector<Expression> children = {
+    Expression(shallow_children)
+  };
   std::vector<Expression> top = {
     Expression(std::string("begin")),
-    Expression(std::string("abc"))
+    children
   };
   Expression expected = Expression(top);
   REQUIRE(expected == parse_tokens(tokens));
 }
+*/
 
 TEST_CASE("Typical case.", PARSE) {
   std::list<Token> tokens = {
@@ -436,7 +445,7 @@ TEST_CASE( "Test Interpreter result with literal expressions", "[interpreter]" )
     Expression result = run(program);
     REQUIRE(result == Expression(false));
   }
-  
+
   { // Number
     std::string program = "(4)";
     Expression result = run(program);
@@ -450,6 +459,7 @@ TEST_CASE( "Test Interpreter result with literal expressions", "[interpreter]" )
   }
 
 }
+
 
 TEST_CASE( "Test Interpreter result with simple procedures (add)", "[interpreter]" ) {
 
