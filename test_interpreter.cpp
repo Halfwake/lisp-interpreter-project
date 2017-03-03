@@ -190,6 +190,13 @@ TEST_CASE("Check expression type.", EXPR) {
 }
 
 TEST_CASE("Check parse_atom on numbers.", EXPR) {
+  REQUIRE(parse_atom(Token(ATOM, "1.0", 1)).getNumber() == 1.0);
+  REQUIRE(parse_atom(Token(ATOM, "-1.0", 1)).getNumber() == -1.0);
+  REQUIRE(parse_atom(Token(ATOM, "1", 1)).getNumber() == 1.0);
+  REQUIRE(parse_atom(Token(ATOM, "-1", 1)).getNumber() == -1.0);
+}
+
+TEST_CASE("Check negative expression.", EXPR) {
   REQUIRE(Expression(1.0).getNumber() == 1.0);
   REQUIRE(Expression(-1.0).getNumber() == -1.0);
 }
@@ -541,6 +548,7 @@ TEST_CASE( "Test Interpreter special forms: begin and define", "[interpreter]" )
   {
     std::string program = "(define answer 42)";
     Expression result = run(program);
+
     REQUIRE(result == Expression(42.));
   }
 
