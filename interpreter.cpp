@@ -16,8 +16,8 @@ Interpreter::Interpreter() {
 bool Interpreter::parse(std::istream & expression) noexcept {
   try {
     std::list<token::Token> tokens = token::tokenize(expression);
-    Expression expression = parse_tokens(tokens);
-    return expression.getChildren().size() != 0;
+    this->expression = parse_tokens(tokens);
+    return this->expression.getChildren().size() != 0;
   } catch (InvalidTokenException e) {
     return false;
   }
@@ -318,7 +318,7 @@ Expression eval_define(Expression expr, environment::Environment & env) {
 }
 
 Expression eval_begin(Expression expr, environment::Environment & env) {
-  if (expr.getChildren().size() > 2) {
+  if (expr.getChildren().size() < 2) {
     throw BadArgumentCountException(expr);
   }
   std::vector<Expression> simplified_expr;
