@@ -103,7 +103,6 @@ bool match_number(token::Token token) {
 }
 
 bool match_symbol(token::Token token) {
-  // TODO! Check if symbol name begins with digit.
   bool not_number = !match_number(token);
   bool not_none = !match_none(token);
   bool not_bool = !match_bool(token);
