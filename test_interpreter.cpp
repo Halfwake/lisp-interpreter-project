@@ -280,9 +280,12 @@ TEST_CASE("Simple value.", PARSE) {
     Token(ATOM, "True", 1),
     Token(CLOSE_PAREN, ")", 1)
   };
+  std::vector<Expression> children = {
+    Expression(true)
+  };
   std::vector<Expression> top = {
     Expression(std::string("begin")),
-    Expression(true)
+    Expression(children)
   };
   Expression expected = Expression(top);
   REQUIRE(expected == parse_tokens(tokens));
