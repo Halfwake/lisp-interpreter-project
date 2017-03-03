@@ -334,7 +334,7 @@ Expression eval_ratio(Expression expr, environment::Environment & env) {
   }
   Expression expr1 = simplified_expr.at(1);
   Expression expr2 = simplified_expr.at(2);
-  return Expression(expr1.getNumber() - expr2.getNumber() + 0.0);  
+  return Expression(expr1.getNumber() / expr2.getNumber());  
 }
 
 const char * BadArgumentTypeException::what () const noexcept {
