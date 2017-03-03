@@ -208,11 +208,7 @@ Expression parse_atom(token::Token token) {
     stream >> value;
     // TODO! This should check if we were actually given a
     // double, since match_number might not be valid.
-    if (token.getText().at(0) == '-') {
-      return Expression(-1.0 * value);
-    } else {
-      return Expression(value);
-    }
+    return Expression(value);
   } else if (match_symbol(token)) {
     return Expression(std::string(token.getText()));
   }
