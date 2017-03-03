@@ -165,14 +165,6 @@ const char * InvalidTokenException::what () const noexcept {
   return output.c_str();
 }
 
-Expression::Expression(const Expression & other) {
-  type = other.type;
-  bool_value = other.bool_value;
-  number_value = other.number_value;
-  symbol_value = other.symbol_value;
-  children = other.children;
-}
-
 AtomType Expression::getType() const {
   return type;
 }
@@ -226,11 +218,11 @@ Expression parse_atom(token::Token token) {
 Expression parse_tokens(std::list<token::Token> tokens) {
   if (tokens.empty()) {
     //TODO Make betterr eror message
-    throw InvalidTokenException(token::Token(token::ATOM, "too many tokens", 1));
+    throw InvalidTokenException(token::Token(token::ATOM, "Empty tokens.", 1));
   }
   if ((tokens.size() == 1) && (match_symbol(tokens.front()))) {
     //TODO Make betterr eror message
-    throw InvalidTokenException(token::Token(token::ATOM, "too many tokens", 1));
+    throw InvalidTokenException(token::Token(token::ATOM, "Bare word.", 1));
   }
   std::vector<Expression> top;
   top.push_back(Expression(std::string("begin")));
@@ -287,4 +279,12 @@ double Expression::getNumber() const {
 
 std::string Expression::getSymbol() const {
   return symbol_value;
+}
+
+Expression::Expression(const Expression & other) {
+  this->type = other.getType();
+  this->bool_value = other.getBool();
+  this->number_value = other.getNumber();
+  this->symbol_value = other.getSymbol();
+  this->children = other.getChildren();
 }
