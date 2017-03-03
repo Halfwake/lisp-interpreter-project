@@ -189,6 +189,11 @@ TEST_CASE("Check expression type.", EXPR) {
   REQUIRE(Expression(children).getType() == LIST);
 }
 
+TEST_CASE("Check parse_atom on numbers.", EXPR) {
+  REQUIRE(Expression(1.0).getNumber() == 1.0);
+  REQUIRE(Expression(-1.0).getNumber() == -1.0);
+}
+
 // We want to support bare symbols or not?
 /*
 TEST_CASE("Bare symbol.", PARSE) {
