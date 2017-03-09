@@ -42,6 +42,7 @@ int main(int argc, char * argv[]) {
 	  print_expression(interpreter.eval());
 	} catch (InterpreterSemanticError e) {
 	  std::cout << "Error" << std::endl;
+	  return EXIT_FAILURE;
 	}
       }
     }
