@@ -5,6 +5,7 @@
 
 #include "interpreter.hpp"
 #include "expression.hpp"
+#include "interpreter_semantic_error.hpp"
 
 void print_expression(Expression expr) {
   std::cout << "(";
@@ -36,7 +37,11 @@ int main(int argc, char * argv[]) {
       std::getline(std::cin, line);
       std::stringstream stream(line);
       if (interpreter.parse(stream)) {
-	print_expression(interpreter.eval());
+	try {
+	  print_expression(interpreter.eval());
+	} catch (InterpreterSemanticError e) {
+	  std::cout << "Error" << std::endl;
+	}
       }
     }
   } else if (argc == 2) {
