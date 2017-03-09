@@ -393,16 +393,15 @@ Expression eval_if(Expression expr, environment::Environment & env) {
   if (expr.getChildren().size() != 4) {
     throw BadArgumentCountException(expr);
   }
-  std::vector<Expression> simplified_expr;
-  for (auto & child : expr.getChildren()) {
-    simplified_expr.push_back(eval_iter(child, env));
-  }
-  if (simplified_expr.at(1).getType() != BOOL) {
+
+  std::vector<Expression> children = expr.getChildren();
+  Expression test_expr = eval_iter(children.at(1), env);
+  if (test_expr.getType() != BOOL) {
     throw BadArgumentTypeException(expr);    
   }
-  if (simplified_expr.at(1).getBool()) {
-    return simplified_expr.at(2);
+  if (test_expr.getBool()) {
+    return eval_iter(children.at(2), env);
   } else {
-    return simplified_expr.at(3);
+    return eval_iter(children.at(3), env);
   }
 }
