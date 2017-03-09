@@ -34,6 +34,6 @@
 ; the special form (if COND THEN ELSE) evaluate to the expression THEN
 ; if COND evaluates to true, else it evaluates to ELSE
 ; note the resulting type can be different for THEN and ELSE 
-(if (< 1 2) (- 5 6) True)
+(if (< 1 2) (- 5 6) true)
 
 ) ; end begin
