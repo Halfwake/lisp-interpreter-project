@@ -34,6 +34,7 @@ int main(int argc, char * argv[]) {
   if (argc == 1) {
     std::string line;
     while (true) {
+      std::cout << "vtscript>";
       std::getline(std::cin, line);
       std::stringstream stream(line);
       if (interpreter.parse(stream)) {
