@@ -13,7 +13,11 @@ void print_expression(Expression expr) {
     std::cout << "None";
     break;
   case BOOL:
-    std::cout << expr.getBool();
+    if (expr.getBool()) {
+      std::cout << "True";
+    } else {
+      std::cout << "False";
+    }
     break;
   case NUMBER:
     std::cout << expr.getNumber();
