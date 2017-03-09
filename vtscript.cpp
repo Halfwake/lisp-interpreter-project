@@ -44,6 +44,9 @@ int main(int argc, char * argv[]) {
 	  std::cout << "Error" << std::endl;
 	  return EXIT_FAILURE;
 	}
+      } else {
+	std::cout << "Error" << std::endl;
+	return EXIT_FAILURE;
       }
     }
   } else if (argc == 2) {
@@ -58,9 +61,15 @@ int main(int argc, char * argv[]) {
   } else if ((argc == 3) && (std::string(argv[1]) == "-e")) {
     std::stringstream stream(argv[2]);
     if (interpreter.parse(stream)) {
-      print_expression(interpreter.eval());      
+      try {
+	print_expression(interpreter.eval());
+      } catch (InterpreterSemanticError e) {
+	std::cout << "Error" << std::endl;
+	return EXIT_FAILURE;
+      }
       return EXIT_SUCCESS;
     } else {
+      std::cout << "Error" << std::endl;
       return EXIT_FAILURE;
     }
   }
