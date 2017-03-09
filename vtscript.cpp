@@ -50,14 +50,15 @@ int main(int argc, char * argv[]) {
       }
     }
   } else if (argc == 2) {
-    /*
-    std::ifstream ifs(std::string(argv[1]));
-    std::istream & stream = ifs;
-    if(interpreter.parse(stream)){
-      std::cerr << "Failed to parse file: " << argv[1] << std::endl; 
+    std::ifstream stream(argv[1]);
+    if (!stream.good()) {
+	std::cout << "Error" << std::endl;
+	return EXIT_FAILURE;
     }
-    std::cout << "(" << interpreter.eval() << ")" << std::endl;
-    */
+    std::ifstream & stream_ref = stream;
+    if(interpreter.parse(stream_ref)){
+      print_expression(interpreter.eval());
+    } 
   } else if ((argc == 3) && (std::string(argv[1]) == "-e")) {
     std::stringstream stream(argv[2]);
     if (interpreter.parse(stream)) {
