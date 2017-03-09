@@ -44,10 +44,10 @@ int main(int argc, char * argv[]) {
     }
     std::cout << "(" << interpreter.eval() << ")" << std::endl;
     */
-  } else if ((argc == 3) && (argv[1] == "-e")) {
+  } else if ((argc == 3) && (std::string(argv[1]) == "-e")) {
     std::stringstream stream(argv[2]);
     if (interpreter.parse(stream)) {
-      std::cout << "(" << interpreter.eval() << ")" << std::endl;
+      print_expression(interpreter.eval());      
       return EXIT_SUCCESS;
     } else {
       return EXIT_FAILURE;
