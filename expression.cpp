@@ -225,19 +225,20 @@ Expression parse_tokens(std::list<token::Token> tokens) {
   }
   std::vector<Expression> top;
   top.push_back(Expression(std::string("begin")));
-  while (!tokens.empty()) {
-    if (match_open(tokens.front())) {
-      tokens.pop_front();
-      top.push_back(parse_tokens_iter(tokens));
-    } else if (match_close(tokens.front())) {
-      //TODO Make betterr eror message
-      throw InvalidTokenException(token::Token(token::ATOM, "too many tokens", 1));
-    } else {
-      top.push_back(parse_atom(tokens.front()));
-      tokens.pop_front();
-    }
+  Expression parse_tree;
+  if (match_open(tokens.front())) {
+    tokens.pop_front();
+    parse_tree = parse_tokens_iter(tokens);
+  } else if (match_close(tokens.front())) {
+    //TODO Make betterr eror message
+    throw InvalidTokenException(token::Token(token::ATOM, "too many tokens", 1));
+  } else {
+    parse_tree =  parse_atom(tokens.front());
   }
-  return Expression(top);
+  if (!tokens.empty()) {
+    throw InvalidTokenException(token::Token(token::ATOM, "too many tokens", 1));
+  }
+  return parse_tree;
 }
 
 std::ostream & operator << (std::ostream & stream, const Expression & expr) {

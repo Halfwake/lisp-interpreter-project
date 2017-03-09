@@ -235,11 +235,7 @@ TEST_CASE("Typical case.", PARSE) {
     Expression(12 * 1.0),
     Expression(18 * 1.0),
   };
-  std::vector<Expression> top = {
-    Expression(std::string("begin")),
-    Expression(children)
-  };
-  Expression expected = Expression(top);
+  Expression expected = Expression(children);
   REQUIRE(expected == parse_tokens(tokens));
 }
 
@@ -265,11 +261,7 @@ TEST_CASE("Harder case.", PARSE) {
     Expression(deep_children),
     Expression(3 * 1.0)
   };
-  std::vector<Expression> top = {
-    Expression(std::string("begin")),
-    Expression(shallow_children)
-  };
-  Expression expected = Expression(top);
+  Expression expected = Expression(shallow_children);
   REQUIRE(expected == parse_tokens(tokens));
 }
 
@@ -288,11 +280,7 @@ TEST_CASE("Boolean constants.", PARSE) {
     Expression(false)
   };
 
-  std::vector<Expression> top = {
-    Expression(std::string("begin")),
-    Expression(children)
-  };
-  Expression expected = Expression(top);
+  Expression expected = Expression(children);
   REQUIRE(expected == parse_tokens(tokens));
 }
 
@@ -320,12 +308,7 @@ TEST_CASE("Boolean expression.", PARSE) {
     Expression(true)
   };
 
-  std::vector<Expression> top = {
-    Expression(std::string("begin")),
-    Expression(children)
-  };
-
-  Expression expected = Expression(top);
+  Expression expected = Expression(children);
   REQUIRE(expected == parse_tokens(tokens));
 }
 
@@ -338,11 +321,8 @@ TEST_CASE("Simple value.", PARSE) {
   std::vector<Expression> children = {
     Expression(true)
   };
-  std::vector<Expression> top = {
-    Expression(std::string("begin")),
-    Expression(children)
-  };
-  Expression expected = Expression(top);
+
+  Expression expected = Expression(children);
   REQUIRE(expected == parse_tokens(tokens));
 }
 
