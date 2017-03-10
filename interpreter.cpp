@@ -36,6 +36,8 @@ Expression Interpreter::eval() {
     throw InterpreterSemanticError("Argumetn of wrong type.");
   } catch (environment::LookupException e) {
     throw InterpreterSemanticError("Unbound variable.");
+  } catch (environment::SetException e) {
+    throw InterpreterSemanticError("Already bound variable.");    
   }
 }
 

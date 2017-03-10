@@ -23,6 +23,7 @@ namespace environment {
  public:
    Expression & get(const Symbol symbol);
    void set(const Symbol symbol, Expression expr);
+   void reset();
  };
 
 
@@ -38,6 +39,18 @@ namespace environment {
  private:
    Symbol symbol;
  };
+
+  /*
+   * Throw when a variable has already been defined.
+   */
+  class SetException : public std::exception {
+  public:
+    SetException (Symbol symbol) : symbol(symbol) {};
+    Symbol getSymbol();
+    const char * what() const noexcept;
+  private:
+    Symbol symbol;
+  };
 
 }
 

@@ -690,4 +690,16 @@ TEST_CASE( "Test all syntactically and semantically CORRECT files.", "[interpret
   }
 }
 
+#include "environment.hpp"
 
+TEST_CASE("Test environment clear.") {
+  environment::Environment env;
+  env.set("abc", Expression(3.0));
+  env.reset();
+  REQUIRE_NOTHROW(env.set("abc", Expression(3.0)));
+}
+
+TEST_CASE("Test environment bad lookup.") {
+  environment::Environment env;
+  REQUIRE_THROWS_AS(env.get("abc"), environment::LookupException);
+}

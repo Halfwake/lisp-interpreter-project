@@ -19,8 +19,12 @@ namespace environment {
     if (map.find(symbol) == map.end()) {
       map[symbol] = expr;
     } else {
-      throw LookupException(symbol);
+      throw SetException(symbol);
     }
+  }
+
+  void Environment::reset() {
+    map.clear();
   }
 
   Symbol LookupException::getSymbol() {
@@ -28,6 +32,14 @@ namespace environment {
   }
 
   const char * LookupException::what () const noexcept {
+    return symbol.c_str();
+  }
+
+  Symbol SetException::getSymbol() {
+    return this->symbol;
+  }
+
+  const char * SetException::what () const noexcept {
     return symbol.c_str();
   }
 
