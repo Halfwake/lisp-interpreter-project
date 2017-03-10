@@ -4,6 +4,12 @@
 #ifndef INTERPRETER_H
 #define INTERPRETER_H
 
+/*
+ * A class for interpreting code. To use it, create one, call parse on
+ * a text stream, check the result of parse to see if the text was
+ * valid, and if it is, call eval. Curious about why eval doesn't call
+ * parse internally and automatically? Me too.
+ */
 class Interpreter {
 public:
   Interpreter();
@@ -14,8 +20,16 @@ private:
   environment::Environment environment;
 };
 
+/*
+ * A helper function that checks if every element in a vector has a
+ * certain type. It's used for type checking in eval.
+ */
 bool is_all_type(AtomType type, std::vector<Expression> expressions);
 
+/*
+ * These functions all evaluate small forms. The main eval functions
+ * dispatches them.
+ */
 Expression eval_iter(Expression expr, environment::Environment & env);
 Expression eval_not(Expression expr, environment::Environment & env);
 Expression eval_and(Expression expr, environment::Environment & env);
@@ -35,6 +49,9 @@ Expression eval_begin(Expression expr, environment::Environment & env);
 Expression eval_if(Expression expr, environment::Environment & env);
 
 
+/*
+ * Throw if an invalid type is passed to a form.
+ */
 class BadArgumentTypeException : public std::exception {
 public:
   BadArgumentTypeException (Expression expression) : expression(expression) {};
@@ -44,6 +61,9 @@ private:
   Expression expression;
 };
 
+/*
+ * Throw if an invalid amount of arguments is thrown to a form.
+ */
 class BadArgumentCountException : public std::exception {
 public:
   BadArgumentCountException (Expression expression) : expression(expression) {};
@@ -53,6 +73,9 @@ private:
   Expression expression;
 };
 
+/*
+ * Throw if an expression matches no known evaluation form.
+ */
 class InvalidExpressionException : public std::exception {
 public:
   InvalidExpressionException (Expression expression) : expression(expression) {};
