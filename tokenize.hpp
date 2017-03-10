@@ -6,8 +6,15 @@
 #define TOKEN_H
 
 namespace token {
+  /*
+   * A token can either be an opening paren, a closing paren, or an atom.
+   */
   enum Type { OPEN_PAREN, CLOSE_PAREN, ATOM };
-  
+
+  /*
+   * This class represents a token for the parser. It includes the
+   * line number the token appeard on for debugging purposes.
+   */
   class Token {
   public:
     Token(Type type, std::string text, size_t lineNumber);
@@ -24,6 +31,10 @@ namespace token {
     size_t lineNumber;
   };
 
+  /*
+   * Take a text stream and return a list of tokens. A list is
+   * returned so that the parser can pull tokens off the list.
+   */
   std::list<Token> tokenize(std::istream & stream);
 }
 
