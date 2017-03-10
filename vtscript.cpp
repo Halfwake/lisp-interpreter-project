@@ -42,7 +42,7 @@ int main(int argc, char * argv[]) {
 	  print_expression(interpreter.eval());
 	} catch (InterpreterSemanticError e) {
 	  std::cout << "Error" << std::endl;
-	  return EXIT_FAILURE;
+	  interpreter = Interpreter();
 	}
       } else {
 	std::cout << "Error" << std::endl;
@@ -57,7 +57,11 @@ int main(int argc, char * argv[]) {
     }
     std::ifstream & stream_ref = stream;
     if(interpreter.parse(stream_ref)){
-      print_expression(interpreter.eval());
+      try {
+	print_expression(interpreter.eval());
+      } catch (InterpreterSemanticError e) {
+	interpreter = Interpreter();
+      }
     } 
   } else if ((argc == 3) && (std::string(argv[1]) == "-e")) {
     std::stringstream stream(argv[2]);
